@@ -1,0 +1,8 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+**/*
+
+!LICENSES/**
+!build/entry.js
+!image/**
+!README

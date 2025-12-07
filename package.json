@@ -1,0 +1,81 @@
+{
+   "name": "spdxheader",
+   "displayName": "SPDX Header",
+   "description": "Patch SPDX header in source.",
+   "icon": "image/negi.png",
+   "type": "module",
+   "version": "0.0.1",
+   "publisher": "barroit",
+   "license": "GPL-3.0-or-later",
+   "main": "build/entry.js",
+   "engines": {
+      "vscode": "^1.74.0"
+   },
+   "categories": [
+      "Other"
+   ],
+   "repository": {
+      "type": "git",
+      "url": "git+ssh://git@github.com:barroit/spdxheader.git"
+   },
+   "contributes": {
+      "commands": [
+         {
+            "command": "spdxheader.add",
+            "title": "add header",
+            "category": "spdx",
+            "enablement": "activeEditor =~ /textFileEditor$/"
+         },
+         {
+            "command": "spdxheader.update",
+            "title": "update header",
+            "category": "spdx",
+            "enablement": "activeEditor =~ /textFileEditor$/"
+         },
+         {
+            "command": "spdxheader.move-ws",
+            "title": "move license id (workspace)",
+            "category": "spdx"
+         },
+         {
+            "command": "spdxheader.update-ws",
+            "title": "update header (workspace)",
+            "category": "spdx"
+         }
+      ],
+      "menus": {
+         "editor/context": [
+            {
+               "submenu": "spdxheader",
+               "group": "9_spdxheader"
+            }
+         ],
+         "spdxheader": [
+            {
+               "command": "spdxheader.add",
+               "group": ".",
+               "when": "editorTextFocus"
+            },
+            {
+               "command": "spdxheader.update",
+               "group": ".",
+               "when": "editorTextFocus"
+            },
+            {
+               "command": "spdxheader.move-ws",
+               "group": "ws"
+            },
+            {
+               "command": "spdxheader.update-ws",
+               "group": "ws"
+            }
+         ]
+      },
+      "submenus": [
+         {
+            "id": "spdxheader",
+            "label": "SPDX Header"
+         }
+      ]
+   }
+}
