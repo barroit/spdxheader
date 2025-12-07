@@ -1,0 +1,5 @@
+spdxheader
+==========
+
+This repo tracks spdxheader source code. It's a vscode extension, for generating
+SPDX header in source file.
