@@ -24,42 +24,45 @@
             "command": "spdxheader.add",
             "title": "add header",
             "category": "spdx",
-            "enablement": "activeEditor =~ /textFileEditor$/"
+            "enablement": "workbenchState != empty && activeEditor =~ /text(File|Resource)Editor$/"
          },
          {
             "command": "spdxheader.update",
             "title": "update header",
             "category": "spdx",
-            "enablement": "activeEditor =~ /textFileEditor$/"
+            "enablement": "workbenchState != empty && activeEditor =~ /text(File|Resource)Editor$/"
          },
          {
             "command": "spdxheader.move-ws",
             "title": "move license id (workspace)",
-            "category": "spdx"
+            "category": "spdx",
+            "enablement": "workbenchState != empty"
          },
          {
             "command": "spdxheader.update-ws",
             "title": "update header (workspace)",
-            "category": "spdx"
+            "category": "spdx",
+            "enablement": "workbenchState != empty"
          }
       ],
       "menus": {
          "editor/context": [
             {
                "submenu": "spdxheader",
-               "group": "9_spdxheader"
+               "group": "9_spdxheader",
+               "when": "workbenchState != empty"
             }
          ],
          "spdxheader": [
             {
                "command": "spdxheader.add",
                "group": ".",
-               "when": "editorTextFocus"
+               "when": "activeEditor =~ /text(File|Resource)Editor$/"
             },
             {
                "command": "spdxheader.update",
                "group": ".",
-               "when": "editorTextFocus"
+               "when": "activeEditor =~ /text(File|Resource)Editor$/"
             },
             {
                "command": "spdxheader.move-ws",
