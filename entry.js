@@ -3,13 +3,14 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-import { cwd } from 'node:process'
-import { commands } from 'vscode'
+import { commands, workspace } from 'vscode'
 
 const {
 	registerCommand: add_cmd,
 	registerTextEditorCommand: add_editor_cmd
 } = commands
+
+const { getConfiguration: config_of } = workspace
 
 const cmds = {
 	'add':       [ import('./cmd/add.js'),       add_editor_cmd ],
@@ -20,10 +21,15 @@ const cmds = {
 
 export async function activate(ctx)
 {
+	const config = config_of('spdxheader.format')
+
 	for (const id of Object.keys(cmds)) {
 		const [ module_promise, add ] = cmds[id]
 		const module = await module_promise
-		const exec = add(`spdxheader.${id}`, module.exec, ctx)
+		const exec = add(`spdxheader.${id}`, module.exec, {
+			ctx,
+			config,
+		})
 
 		ctx.subscriptions.push(exec)
 	}

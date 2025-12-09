@@ -6,7 +6,7 @@ prefix := build
 bundle := entry.js
 vsix   := $(name).vsix
 
-input := entry.js package.json
+input := entry.js helper.js package.json
 input += $(wildcard cmd/*.js)
 
 profile := --platform=node --format=esm

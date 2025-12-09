@@ -18,6 +18,9 @@
       "type": "git",
       "url": "git+ssh://git@github.com:barroit/spdxheader.git"
    },
+   "enabledApiProposals": [
+      "extensionRuntime"
+   ],
    "contributes": {
       "commands": [
          {
@@ -45,6 +48,19 @@
             "enablement": "workbenchState != empty"
          }
       ],
+      "configuration": {
+         "title": "Language pattern",
+         "type": "object",
+         "properties": {
+            "spdxheader.format": {
+               "type": "object",
+               "default": {
+                  ".": "#",
+                  "javascript": "/* {} */"
+               }
+            }
+         }
+      },
       "menus": {
          "editor/context": [
             {
