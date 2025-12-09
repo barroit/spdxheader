@@ -6,20 +6,24 @@
 import { cwd } from 'node:process'
 import { commands } from 'vscode'
 
-const { registerTextEditorCommand: register } = commands
+const {
+	registerCommand: add_cmd,
+	registerTextEditorCommand: add_editor_cmd
+} = commands
 
 const cmds = {
-	'spdxheader.add':       import('./cmd/add.js'),
-	'spdxheader.update':    import('./cmd/update.js'),
-	'spdxheader.move-ws':   import('./cmd/move-ws.js'),
-	'spdxheader.update-ws': import('./cmd/update-ws.js'),
+	'add':       [ import('./cmd/add.js'),       add_editor_cmd ],
+	'update':    [ import('./cmd/update.js'),    add_editor_cmd ],
+	'move-ws':   [ import('./cmd/move_ws.js'),   add_cmd ],
+	'update-ws': [ import('./cmd/update_ws.js'), add_cmd ],
 }
 
 export async function activate(ctx)
 {
 	for (const id of Object.keys(cmds)) {
-		const module = await cmds[id]
-		const exec = register(id, module.exec)
+		const [ module_promise, add ] = cmds[id]
+		const module = await module_promise
+		const exec = add(`spdxheader.${id}`, module.exec, ctx)
 
 		ctx.subscriptions.push(exec)
 	}
