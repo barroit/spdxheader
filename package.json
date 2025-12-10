@@ -18,9 +18,6 @@
       "type": "git",
       "url": "git+ssh://git@github.com:barroit/spdxheader.git"
    },
-   "enabledApiProposals": [
-      "extensionRuntime"
-   ],
    "contributes": {
       "commands": [
          {

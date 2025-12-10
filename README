@@ -4,4 +4,4 @@ spdxheader
 This repo tracks spdxheader source code. It's a vscode extension, for generating
 SPDX header in source file.
 
-image/negi.png is licensed under LICENSES/MDM-2.1.
+image/negi.png is licensed under LicenseRef-MDM-2.1.

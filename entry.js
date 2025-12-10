@@ -6,17 +6,17 @@
 import { commands, workspace } from 'vscode'
 
 const {
-	registerCommand: add_cmd,
-	registerTextEditorCommand: add_editor_cmd
+	registerCommand: cmd,
+	registerTextEditorCommand: editor_cmd
 } = commands
 
 const { getConfiguration: config_of } = workspace
 
 const cmds = {
-	'add':       [ import('./cmd/add.js'),       add_editor_cmd ],
-	'update':    [ import('./cmd/update.js'),    add_editor_cmd ],
-	'move-ws':   [ import('./cmd/move_ws.js'),   add_cmd ],
-	'update-ws': [ import('./cmd/update_ws.js'), add_cmd ],
+	'add':       [ import('./cmd/add.js'),       editor_cmd ],
+	'update':    [ import('./cmd/update.js'),    editor_cmd ],
+	'move-ws':   [ import('./cmd/move_ws.js'),   cmd        ],
+	'update-ws': [ import('./cmd/update_ws.js'), cmd        ],
 }
 
 export async function activate(ctx)
@@ -24,12 +24,10 @@ export async function activate(ctx)
 	const config = config_of('spdxheader.format')
 
 	for (const id of Object.keys(cmds)) {
-		const [ module_promise, add ] = cmds[id]
+		const [ module_promise, cb ] = cmds[id]
 		const module = await module_promise
-		const exec = add(`spdxheader.${id}`, module.exec, {
-			ctx,
-			config,
-		})
+
+		const exec = cb(`spdxheader.${id}`, module.exec, { ctx, config })
 
 		ctx.subscriptions.push(exec)
 	}

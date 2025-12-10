@@ -3,36 +3,39 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-import { die, format_spdx, info, require_license, spdx_fmt } from '../helper.js'
-import { window, Position as position } from 'vscode'
+import { Position as position } from 'vscode'
 
-const { showQuickPick: quick_pick } = window
+import { info } from '../helper/mesg.js'
+import {
+	gen_spdx_header,
+	require_license,
+} from '../helper.patch/license.js'
 
 export async function exec(editor)
 {
 	const doc = editor.document
-	const prompt = 'Select the target license'
-	const license = await require_license(prompt, 'target license')
 
-	const fmt = spdx_fmt(doc.languageId, this.config)
-	const spdx = format_spdx(fmt, license)
+	const license = await require_license('Select the target license',
+					      'target license')
+	const header = gen_spdx_header(doc.languageId, this.config, license)
 
 	const lines = doc.lineCount
 	const line0 = doc.lineAt(0)
 
-	if (spdx == line0.text) {
+	if (header == line0.text) {
 		info('nothing to be done')
 		return
 	}
-	
-	editor.edit(edit =>
+
+	await editor.edit(edit =>
 	{
 		const pos = new position(0, 0)
 
-		edit.insert(pos, `${spdx}\n`)
+		edit.insert(pos, `${header}\n`)
 
 		if (line0.text != '' || lines == 1)
 			edit.insert(pos, '\n')
+	})
 
-	}).then(() => info(`new header with ${license}`))
+	info(`new header with ${license}`)
 }
