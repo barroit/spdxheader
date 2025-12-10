@@ -40,7 +40,7 @@ export async function require_license(title, prompt)
 	return license
 }
 
-function gen_spdx_fmt(lang, dict)
+export function gen_spdx_fmt(lang, dict)
 {
 	let fmt = dict['.']
 
@@ -53,11 +53,15 @@ function gen_spdx_fmt(lang, dict)
 	return fmt
 }
 
+export function apply_spdx_fmt(fmt, license)
+{
+	return fmt.replace(/\{\}/, `SPDX-License-Identifier: ${license}`)
+}
+
 export function gen_spdx_header(lang, dict, license)
 {
 	const fmt = gen_spdx_fmt(lang, dict)
-	const header = fmt.replace(/\{\}/,
-				   `SPDX-License-Identifier: ${license}`)
+	const header = apply_spdx_fmt(fmt, license)
 
 	return header
 }
