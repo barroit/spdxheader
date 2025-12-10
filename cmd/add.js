@@ -3,7 +3,7 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-import { fetch_license, die } from '../helper.js'
+import { die, format_spdx, info, require_license, spdx_fmt } from '../helper.js'
 import { window, Position as position } from 'vscode'
 
 const { showQuickPick: quick_pick } = window
@@ -11,31 +11,19 @@ const { showQuickPick: quick_pick } = window
 export async function exec(editor)
 {
 	const doc = editor.document
-	const config = this.config
+	const prompt = 'Select the target license'
+	const license = await require_license(prompt, 'target license')
 
-	const lang = doc.languageId
-	let spdx = config['.']
-
-	if (lang in config)
-		spdx = config[lang]
-
-	const licenses = fetch_license()
-	const license = await quick_pick(licenses)
-
-	if (!license)
-		die('no license selected')
-
-	if (!spdx.match(/\{\}/))
-		spdx += ' {}'
-
-	spdx = spdx.replace(/\{\}/, `SPDX-License-Identifier: ${license}`)
+	const fmt = spdx_fmt(doc.languageId, this.config)
+	const spdx = format_spdx(fmt, license)
 
 	const lines = doc.lineCount
 	const line0 = doc.lineAt(0)
-	const old = line0.text
 
-	if (spdx == old)
+	if (spdx == line0.text) {
+		info('nothing to be done')
 		return
+	}
 	
 	editor.edit(edit =>
 	{
@@ -43,7 +31,8 @@ export async function exec(editor)
 
 		edit.insert(pos, `${spdx}\n`)
 
-		if (old != '' || lines == 1)
+		if (line0.text != '' || lines == 1)
 			edit.insert(pos, '\n')
-	})
+
+	}).then(() => info(`new header with ${license}`))
 }
