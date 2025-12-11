@@ -1,0 +1,30 @@
+{
+   "command": "spdxheader.add",
+   "title": "add header (select)",
+   "category": "spdx",
+   "enablement": "workbenchState != empty && activeEditor =~ /text(File|Resource)Editor$/"
+},
+{
+   "command": "spdxheader.addef",
+   "title": "add header",
+   "category": "spdx",
+   "enablement": "workbenchState != empty && activeEditor =~ /text(File|Resource)Editor$/"
+},
+{
+   "command": "spdxheader.update",
+   "title": "update header",
+   "category": "spdx",
+   "enablement": "workbenchState != empty && activeEditor =~ /text(File|Resource)Editor$/"
+},
+{
+   "command": "spdxheader.move-ws",
+   "title": "move license id (workspace)",
+   "category": "spdx",
+   "enablement": "workbenchState != empty"
+},
+{
+   "command": "spdxheader.update-ws",
+   "title": "update header (workspace)",
+   "category": "spdx",
+   "enablement": "workbenchState != empty"
+}

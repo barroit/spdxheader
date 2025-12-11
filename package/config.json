@@ -1,0 +1,57 @@
+"spdxheader.shebang": {
+   "type": "object",
+   "default": {
+      "python": "/usr/bin/python3",
+      "sh": {
+         "bash":  "/bin/bash",
+         "posix": "/bin/sh",
+         "zsh":   "/bin/zsh"
+      }
+   }
+},
+"spdxheader.spdx": {
+   "type": "object",
+   "default": {
+      "*":     "#",
+      "c":     "//",
+      "h":     "/* {} */",
+      "html":  "<!-- {} -->",
+      "java":  "//",
+      "jsonc": "/* {} */",
+      "js":    "/* {} */",
+      "rst":   ".."
+   }
+},
+"spdxheader.copyright": {
+   "type": "object",
+   "default": {
+      "whitelist": [
+         "c",
+         "h",
+         "html",
+         "java",
+         "js",
+         "jsx",
+         "python",
+         "ts",
+         "tsx"
+      ],
+      "format": {
+         "*": [
+            "/*",
+            " * {}",
+            " */"
+         ],
+         "html": [
+            "<!--",
+            "  -- {}",
+            "  -->"
+         ],
+         "python": [
+            "#",
+            "# {}",
+            "#"
+         ]
+      }
+   }
+}

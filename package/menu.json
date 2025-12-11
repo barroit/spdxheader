@@ -1,0 +1,32 @@
+"editor/context": [
+   {
+      "submenu": "spdxheader",
+      "group": "9_spdxheader",
+      "when": "workbenchState != empty"
+   }
+],
+"spdxheader": [
+   {
+      "command": "spdxheader.add",
+      "group": ".",
+      "when": "activeEditor =~ /text(File|Resource)Editor$/"
+   },
+   {
+      "command": "spdxheader.addef",
+      "group": ".",
+      "when": "activeEditor =~ /text(File|Resource)Editor$/"
+   },
+   {
+      "command": "spdxheader.update",
+      "group": ".",
+      "when": "activeEditor =~ /text(File|Resource)Editor$/"
+   },
+   {
+      "command": "spdxheader.move-ws",
+      "group": "ws"
+   },
+   {
+      "command": "spdxheader.update-ws",
+      "group": "ws"
+   }
+]
