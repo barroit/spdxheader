@@ -22,6 +22,12 @@
       "commands": [
          {
             "command": "spdxheader.add",
+            "title": "add header (select)",
+            "category": "spdx",
+            "enablement": "workbenchState != empty && activeEditor =~ /text(File|Resource)Editor$/"
+         },
+         {
+            "command": "spdxheader.addef",
             "title": "add header",
             "category": "spdx",
             "enablement": "workbenchState != empty && activeEditor =~ /text(File|Resource)Editor$/"
@@ -69,6 +75,11 @@
          "spdxheader": [
             {
                "command": "spdxheader.add",
+               "group": ".",
+               "when": "activeEditor =~ /text(File|Resource)Editor$/"
+            },
+            {
+               "command": "spdxheader.addef",
                "group": ".",
                "when": "activeEditor =~ /text(File|Resource)Editor$/"
             },
