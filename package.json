@@ -19,6 +19,53 @@
       "url": "git+ssh://git@github.com:barroit/spdxheader.git"
    },
    "contributes": {
+      "configuration": {
+         "title": "Language pattern",
+         "type": "object",
+         "properties": {
+            "spdxheader.shebang": {
+               "type": "object",
+               "default": {
+                  "python": "/usr/bin/python3",
+                  "sh": {
+                     "bash": "/bin/bash",
+                     "posix": "/bin/sh",
+                     "zsh": "/bin/zsh"
+                  }
+               }
+            },
+            "spdxheader.spdx": {
+               "type": "object",
+               "default": {
+                  ".": "#",
+                  "c": "//",
+                  "h": "/* {} */",
+                  "html": "<!-- {} -->",
+                  "jsonc": "$h",
+                  "js": "$h",
+                  "rst": ".."
+               }
+            },
+            "spdxheader.copyright": {
+               "type": "object",
+               "default": {
+                  "c": [
+                     "/*",
+                     " * {}",
+                     " */"
+                  ],
+                  "h": "$c",
+                  "html": [
+                     "<!--",
+                     "  -- {}",
+                     "  -->"
+                  ],
+                  "js": "$c",
+                  "jsonc": "$c"
+               }
+            }
+         }
+      },
       "commands": [
          {
             "command": "spdxheader.add",
@@ -51,19 +98,6 @@
             "enablement": "workbenchState != empty"
          }
       ],
-      "configuration": {
-         "title": "Language pattern",
-         "type": "object",
-         "properties": {
-            "spdxheader.format": {
-               "type": "object",
-               "default": {
-                  ".": "#",
-                  "javascript": "/* {} */"
-               }
-            }
-         }
-      },
       "menus": {
          "editor/context": [
             {
