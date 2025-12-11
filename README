@@ -5,3 +5,17 @@ This repo tracks spdxheader source code. It's a vscode extension, for generating
 SPDX header in source file.
 
 image/negi.png is licensed under LicenseRef-MDM-2.1.
+
+Install from source
+===================
+
+On linux and macos, in spdxheader repo, run:
+
+	# clone vscdevp.git into ../vscdevp
+	(cd ..; git clone git@github.com:barroit/vscdevp.git)
+
+	# require esbuild, vsce, and jq in PATH
+	make
+
+On windows, no, drop windows, you need to switch to a linux or macos machine in
+order to install it from source :)
