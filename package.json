@@ -20,7 +20,6 @@
    },
    "contributes": {
       "configuration": {
-         "title": "Language pattern",
          "type": "object",
          "properties": {
             "spdxheader.shebang": {
@@ -28,40 +27,56 @@
                "default": {
                   "python": "/usr/bin/python3",
                   "sh": {
-                     "bash": "/bin/bash",
+                     "bash":  "/bin/bash",
                      "posix": "/bin/sh",
-                     "zsh": "/bin/zsh"
+                     "zsh":   "/bin/zsh"
                   }
                }
             },
             "spdxheader.spdx": {
                "type": "object",
                "default": {
-                  ".": "#",
-                  "c": "//",
-                  "h": "/* {} */",
-                  "html": "<!-- {} -->",
-                  "jsonc": "$h",
-                  "js": "$h",
-                  "rst": ".."
+                  "*":     "#",
+                  "c":     "//",
+                  "h":     "/* {} */",
+                  "html":  "<!-- {} -->",
+                  "java":  "//",
+                  "jsonc": "/* {} */",
+                  "js":    "/* {} */",
+                  "rst":   ".."
                }
             },
             "spdxheader.copyright": {
                "type": "object",
                "default": {
-                  "c": [
-                     "/*",
-                     " * {}",
-                     " */"
+                  "whitelist": [
+                     "c",
+                     "h",
+                     "html",
+                     "java",
+                     "js",
+                     "jsx",
+                     "python",
+                     "ts",
+                     "tsx"
                   ],
-                  "h": "$c",
-                  "html": [
-                     "<!--",
-                     "  -- {}",
-                     "  -->"
-                  ],
-                  "js": "$c",
-                  "jsonc": "$c"
+                  "format": {
+                     "*": [
+                        "/*",
+                        " * {}",
+                        " */"
+                     ],
+                     "html": [
+                        "<!--",
+                        "  -- {}",
+                        "  -->"
+                     ],
+                     "python": [
+                        "#",
+                        "# {}",
+                        "#"
+                     ]
+                  }
                }
             }
          }
