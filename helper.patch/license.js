@@ -12,6 +12,9 @@ import { prefix } from '../helper/repo.js'
 
 const { showQuickPick: vsc_quick_pick } = window
 
+const { ids: spdx_license_id_arr } = await import('../build/licenses.json')
+const spdx_license_ids = new Set(spdx_license_id_arr)
+
 function fetch_license()
 {
 	const repo = prefix()
@@ -55,6 +58,9 @@ export function gen_spdx_fmt(lang, dict)
 
 export function apply_spdx_fmt(fmt, license)
 {
+	if (!spdx_license_ids.has(license))
+		license = `LicenseRef-${license}`
+
 	return fmt.replace(/\{\}/, `SPDX-License-Identifier: ${license}`)
 }
 
