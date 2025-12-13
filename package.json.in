@@ -1,8 +1,5 @@
 {
    "name": "spdxheader",
-   "displayName": "SPDX Header",
-   "description": "Patch SPDX header in source.",
-   "icon": "image/negi.png",
    "type": "module",
    "version": "0.0.1",
    "publisher": "barroit",
@@ -11,12 +8,8 @@
    "engines": {
       "vscode": "^1.74.0"
    },
-   "categories": [
-      "Other"
-   ],
-   "repository": {
-      "type": "git",
-      "url": "git+ssh://git@github.com:barroit/spdxheader.git"
+   "devDependencies": {
+      "picomatch": "^4.0.3"
    },
    "contributes": {
       "configuration": {
@@ -34,5 +27,15 @@ include(`package/menu.json')dnl
       "submenus": [
 include(`package/submenu.json')dnl
       ]
+   },
+   "displayName": "SPDX Header",
+   "description": "Patch SPDX header in source.",
+   "icon": "image/negi.png",
+   "categories": [
+      "Other"
+   ],
+   "repository": {
+      "type": "git",
+      "url": "git+ssh://git@github.com:barroit/spdxheader.git"
    }
 }
