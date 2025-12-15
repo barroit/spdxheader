@@ -25,7 +25,7 @@ This is a VS Code extension that adds SPDX license headers to source files. It s
 - **ES Modules**: Use `import`/`export` syntax throughout
 - **Async Commands**: All command implementations are async functions exported as `exec`
 - **Error Handling**: Use `die()` from `helper/mesg.js` for fatal errors, `info()` for user feedback
-- **License Validation**: Check against `spdx_license_ids` Set from `build/licenses.json`
+- **License Validation**: Check against `license_ids` Set from `build/licenses.json`
 - **File Matching**: Use `picomatch` for extension/language pattern matching
 - **VS Code APIs**: Access via destructured imports (e.g., `const { showQuickPick } = window`)
 - **Lean Code**: Prefer concise, minimal implementations; avoid unnecessary abstractions or boilerplate
@@ -33,8 +33,8 @@ This is a VS Code extension that adds SPDX license headers to source files. It s
 
 ## Examples
 - **Adding SPDX Header**: In `cmd/add.js`, match file extension to config, generate format like `/* SPDX-License-Identifier: MIT */`
-- **License Selection**: Use `require_license()` to show QuickPick of files from `LICENSES/`, validate against SPDX IDs
-- **Header Patching**: Apply headers by inserting at file top, handling existing headers via replace logic in `apply_header()`
+- **License Selection**: Use `spdx_pick_license()` to show QuickPick of files from `LICENSES/`, validate against SPDX IDs
+- **Header Patching**: Apply headers by inserting at file top, handling existing headers via replace logic in `spdx_emit_header()`
 
 ## Dependencies
 - **Runtime**: VS Code ^1.74.0, picomatch for glob matching

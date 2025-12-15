@@ -9,12 +9,12 @@ import {
 	Uri as vsc_uri,
 } from 'vscode'
 
-import { ls_files } from '../helper/repo.js'
-import {
-	apply_spdx_fmt,
-	gen_spdx_fmt,
-	require_license,
-} from '../helper.patch/license.js'
+// import { ls_files } from '../helper/repo.js'
+// import {
+// 	apply_spdx_fmt,
+// 	gen_spdx_fmt,
+// 	spdx_pick_license,
+// } from '../helper.patch/license.js'
 
 const {
 	applyEdit: vsc_apply_edit,
@@ -41,9 +41,9 @@ export async function exec()
 {
 	const edit = new vsc_ws_edit()
 
-	const old_license = await require_license(
+	const old_license = await spdx_pick_license(
 		'Select the license to replace', 'old license')
-	const new_license = await require_license(
+	const new_license = await spdx_pick_license(
 		'Select the license to replace with', 'new license')
 
 	let files = ls_files()

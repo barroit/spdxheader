@@ -5,6 +5,8 @@
 
 import { commands, workspace } from 'vscode'
 
+import { map_ctx } from './helper/vsc.js'
+
 const {
 	registerCommand: cmd,
 	registerTextEditorCommand: editor_cmd
@@ -22,41 +24,17 @@ const cmds = {
 
 export async function activate(ctx)
 {
-	const config = config_of('spdxheader.format')
+	const format = config_of('spdxheader')
 
 	for (const id of Object.keys(cmds)) {
 		const [ module_promise, cb ] = cmds[id]
+
 		const module = await module_promise
-
-		const cmd_ctx = {
-			environ: ctx.environmentVariableCollection,
-			current: ctx.extension,
-
-			binary: {
-				mode: ctx.extensionMode,
-				path: ctx.extensionPath,
-				uri: ctx.extensionUri,
-			},
-
-			datadir: ctx.globalStoragePath,
-			datadir_uri: ctx.globalStorageUri,
-
-			ws_datadir: ctx.storagePath,
-			ws_datadir_uri: ctx.storageUri,
-
-			logdir: ctx.logPath,
-			logdir_uri: ctx.logUri,
-
-			secret: ctx.secrets,
-
-			state: ctx.globalState,
-			ws_state: ctx.workspaceState,
-
-			config,
-		}
+		const cmd_ctx = map_ctx(ctx)
 
 		const exec = cb(`spdxheader.${id}`, module.exec, cmd_ctx)
 
+		cmd_ctx.format = format
 		ctx.subscriptions.push(exec)
 	}
 }
