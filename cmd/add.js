@@ -66,16 +66,19 @@ function is_copr_enabled(path, ignores)
 	return ignores && test(path, ignores)
 }
 
-function push_change(from, to, at, queue)
+function push_change(doc, from, to, at, queue)
 {
+	const last = doc.lineCount - 1
+	const mask = last != at
+
 	if (from == to)
-		return 1
+		return 1 & mask
 
 	const pos = new vsc_pos(at, 0)
 
 	if (!from) {
-		queue.push([ pos, to, REPLACE ])
-		return 1
+		queue.push([ pos, to, REPLACE & mask ])
+		return 1 & mask
 
 	} else {
 		queue.push([ pos, to, INSERT ])
@@ -112,7 +115,7 @@ async function insert_shebang(editor, shebang, changes, next)
 
 	const header = `#!${shebang}`
 
-	return push_change(line.text, header, next, changes)
+	return push_change(doc, line.text, header, next, changes)
 }
 
 async function insert_spdx(editor, fmt, changes, next, args)
@@ -136,7 +139,7 @@ async function insert_spdx(editor, fmt, changes, next, args)
 	const header = spdx_emit_header(new_fmt, new_id)
 	const line = doc.lineAt(next)
 
-	return push_change(line.text, header, next, changes)
+	return push_change(doc, line.text, header, next, changes)
 }
 
 function emit_copr_header(fmt, id)
@@ -166,7 +169,7 @@ async function insert_copr(editor, fmts, changes, next_in)
 			header = fmt.replace(/\{\}/, repl)
 		}
 
-		next += push_change(line.text, header, next, changes)
+		next += push_change(doc, line.text, header, next, changes)
 	}
 
 	if (found > 1)
@@ -177,7 +180,7 @@ async function insert_copr(editor, fmts, changes, next_in)
 	return next - next_in
 }
 
-function apply_changes(cursor, changes, next)
+function apply_changes(doc, cursor, changes, last)
 {
 	for (const [ start, text, mode ] of changes) {
 		if (mode == REPLACE)
@@ -186,10 +189,11 @@ function apply_changes(cursor, changes, next)
 			cursor.insert(start, `${text}\n`)
 	}
 
-	const [ last ] = changes.pop()
+	const [ last_change ] = changes.pop()
+	const last_line = doc.lineAt(last)
 
-	if (last.line == next) {
-		const pos = new vsc_pos(next, 0)
+	if (last_change.line == last || last_line.text) {
+		const pos = new vsc_pos(last, 0)
 
 		cursor.insert(pos, '\n')
 	}
@@ -228,7 +232,7 @@ export async function exec(editor, dumbass, args)
 	if (!changes.length)
 		return
 
-	editor.edit(cursor => apply_changes(cursor, changes, next))
+	editor.edit(cursor => apply_changes(doc, cursor, changes, next))
 
 	if (!doc.isUntitled)
 		doc.save()
