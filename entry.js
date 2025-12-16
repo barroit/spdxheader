@@ -24,7 +24,7 @@ const cmds = {
 
 export async function activate(ctx)
 {
-	const format = config_of('spdxheader')
+	const fetch_format = () => config_of('spdxheader')
 
 	for (const id of Object.keys(cmds)) {
 		const [ module_promise, cb ] = cmds[id]
@@ -34,7 +34,7 @@ export async function activate(ctx)
 
 		const exec = cb(`spdxheader.${id}`, module.exec, cmd_ctx)
 
-		cmd_ctx.format = format
+		cmd_ctx.fetch_format = fetch_format
 		ctx.subscriptions.push(exec)
 	}
 }

@@ -27,13 +27,9 @@ const {
 
 function move(doc, cursor, from, to)
 {
-	const path = doc.uri.fsPath
-	const lang = doc.languageId
-	const ext = extname(path)
-
-	let { spdx: fmt } = fmt_resolve(this.format, ext, lang, [ 'spdx' ])
-
-	fmt = fmt_ensure_arg(fmt)
+	const format = this.fetch_format()
+	const { spdx: fmt_in } = fmt_resolve(format, doc, [ 'spdx' ])
+	const fmt = fmt_ensure_arg(fmt_in)
 
 	const origin = spdx_emit_header(fmt, from)
 	const replace = spdx_emit_header(fmt, to)

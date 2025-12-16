@@ -3,8 +3,6 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-import { extname } from 'node:path'
-
 import { isMatch as test } from 'picomatch'
 import { Position as vsc_pos, Range as vsc_range, window } from 'vscode'
 
@@ -15,6 +13,7 @@ import {
 	fmt_has_arg,
 	fmt_ensure_arg,
 	fmt_resolve,
+	fmt_assert_single,
 } from '../helper.patch/fmt.js'
 import {
 	spdx_pick_license,
@@ -29,7 +28,7 @@ const REPLACE = 1
 
 function is_copr_enabled(path, ignores)
 {
-	return ignores && test(path, ignores)
+	return ignores && !test(path, ignores)
 }
 
 function push_change(doc, from, to, at, queue)
@@ -52,12 +51,12 @@ function push_change(doc, from, to, at, queue)
 	}
 }
 
-async function require_shebang_binary(map)
+async function require_shebang_binary(map, path)
 {
 	const keys = Object.keys(map)
 
 	if (!keys)
-		die('malformatted shebang config')
+		die(`malformatted shebang config at ${path}`)
 
 	const items = Object.values(map)
 	const binary = vsc_quick_pick(items, {
@@ -71,20 +70,20 @@ async function require_shebang_binary(map)
 	return binary
 }
 
-async function insert_shebang(editor, shebang, changes, next)
+async function insert_shebang(editor, shebang, shebang_path, changes, next)
 {
 	const doc = editor.document
 	const line = doc.lineAt(next)
 
 	if (typeof shebang != 'string')
-		shebang = await require_shebang_binary(shebang)
+		shebang = await require_shebang_binary(shebang, shebang_path)
 
 	const header = `#!${shebang}`
 
 	return push_change(doc, line.text, header, next, changes)
 }
 
-async function insert_spdx(editor, fmt, changes, next, args)
+async function insert_spdx(editor, fmt, fmt_path, changes, next, args)
 {
 	const doc = editor.document
 	const state = this.ws_state
@@ -108,12 +107,7 @@ async function insert_spdx(editor, fmt, changes, next, args)
 	return push_change(doc, line.text, header, next, changes)
 }
 
-function emit_copr_header(fmt, id)
-{
-	return fmt.replace(/\{\}/, `SPDX-License-Identifier: ${id}`)
-}
-
-async function insert_copr(editor, fmts, changes, next_in)
+async function insert_copr(editor, fmts, fmts_path, changes, next_in)
 {
 	const doc = editor.document
 	const date = new Date()
@@ -138,11 +132,7 @@ async function insert_copr(editor, fmts, changes, next_in)
 		next += push_change(doc, line.text, header, next, changes)
 	}
 
-	if (found > 1)
-		die('found multiple placeholders in copyright format list')
-	if (found == 0)
-		die('no placeholder found in copyright format list')
-
+	fmt_assert_single(found, fmts_path)
 	return next - next_in
 }
 
@@ -167,28 +157,30 @@ function apply_changes(doc, cursor, changes, last)
 
 export async function exec(editor, dumbass, args)
 {
+	const format = this.fetch_format()
 	const doc = editor.document
 	const path = doc.uri.fsPath
 
-	const lang = doc.languageId
-	let ext = extname(path)
-
-	const fmts = fmt_resolve(this.format, ext, lang)
+	const fmts = fmt_resolve(format, doc)
 	const use_copr = is_copr_enabled(path, fmts.copr_y)
 
+	if (!use_copr)
+		fmts.copr = undefined
+
 	const tasks = [
-		[ fmts.shebang,             insert_shebang, fmts.shebang ],
-		[ fmts.spdx,                insert_spdx,    fmts.spdx    ],
-		[ fmts.copr_y && fmts.copr, insert_copr,    fmts.copr    ],
+		[ fmts.shebang, insert_shebang, fmts.shebang_path ],
+		[ fmts.spdx   , insert_spdx,    fmts.spdx_path    ],
+		[ fmts.copr   , insert_copr,    fmts.copr_path    ],
 	]
 	const changes = []
 	let next = 0
 
-	for (const [ cond, func, data ] of tasks) {
-		if (!cond)
+	for (const [ data, func, data_path ] of tasks) {
+		if (!data)
 			continue
 
-		next += await func.call(this, editor, data, changes, next, args)
+		next += await func.call(this, editor,
+					data, data_path, changes, next, args)
 	}
 
 	if (!changes.length)

@@ -3,6 +3,8 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
+import { extname } from 'node:path'
+
 export function fmt_has_arg(fmt)
 {
 	return fmt.match(/\{\}/)
@@ -24,9 +26,14 @@ function keys_to_set(obj)
 	return set
 }
 
-export function fmt_resolve(map, ext, lang, target_arr = [])
+export function fmt_resolve(map, doc, target_arr = [])
 {
-	ext = ext.slice(1)
+	const path = doc.uri.fsPath
+	const lang = doc.languageId
+	let ext = extname(path)
+
+	if (ext)
+		ext = ext.slice(1)
 
 	const ret = {}
 	let checks = [
@@ -45,7 +52,20 @@ export function fmt_resolve(map, ext, lang, target_arr = [])
 		const found = search.find(val => val && list.has(val))
 
 		ret[name] = map[key][found]
+		ret[`${name}_path`] = `${NAME}.${key}.${found}`
 	}
 
 	return ret
+}
+
+export function fmt_assert_single(found, path)
+{
+	switch (found) {
+	case 1:
+		break
+	case 0:
+		die(`found multiple placeholders in ${path}`)
+	default:
+		die(`found multiple placeholders in ${path}`)
+	}
 }
