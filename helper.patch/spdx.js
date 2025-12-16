@@ -45,7 +45,6 @@ export async function spdx_pick_license(config)
 	return license
 }
 
-
 export function spdx_fixup_id(id)
 {
 	if (!license_ids.has(id))

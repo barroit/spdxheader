@@ -11,7 +11,11 @@ import { Position as vsc_pos, Range as vsc_range, window } from 'vscode'
 import { info, die } from '../helper/mesg.js'
 import { git_user_name, git_user_email } from '../helper/git.js'
 
-import { fmt_has_arg, fmt_ensure_arg } from '../helper.patch/fmt.js'
+import {
+	fmt_has_arg,
+	fmt_ensure_arg,
+	fmt_resolve,
+} from '../helper.patch/fmt.js'
 import {
 	spdx_pick_license,
 	spdx_fixup_id,
@@ -22,44 +26,6 @@ const { showQuickPick: vsc_quick_pick } = window
 
 const INSERT  = 0
 const REPLACE = 1
-
-function keys_to_set(obj)
-{
-	const arr = Object.keys(obj)
-	const set = new Set(arr)
-
-	return set
-}
-
-function pick_fmt_key(ext, lang, format)
-{
-	const results = {}
-	const checks = [
-		[ 'shebang', 'shebang',           [ ext, lang      ] ],
-		[ 'spdx',    'spdx',              [ ext, lang, '*' ] ],
-		[ 'copr',    'copyright',         [ ext, lang, '*' ] ],
-		[ 'copr_y',  'copyright_enabled', [ ext, lang      ] ],
-	]
-
-	for (const [ name, key, search ] of checks) {
-		const list = keys_to_set(format[key])
-		const found = search.find(val => val && list.has(val))
-
-		results[name] = found
-	}
-
-	return results
-}
-
-function map_fmt_list(fmts, keys)
-{
-	return {
-		shebang: fmts.shebang[keys.shebang],
-		spdx:    fmts.spdx[keys.spdx],
-		copr:    fmts.copyright[keys.copr],
-		copr_y:  fmts.copyright_enabled[keys.copr_y],
-	}
-}
 
 function is_copr_enabled(path, ignores)
 {
@@ -207,11 +173,7 @@ export async function exec(editor, dumbass, args)
 	const lang = doc.languageId
 	let ext = extname(path)
 
-	if (ext)
-		ext = ext.slice(1)
-
-	const keys = pick_fmt_key(ext, lang, this.format)
-	const fmts = map_fmt_list(this.format, keys)
+	const fmts = fmt_resolve(this.format, ext, lang)
 	const use_copr = is_copr_enabled(path, fmts.copr_y)
 
 	const tasks = [

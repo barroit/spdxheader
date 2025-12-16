@@ -3,18 +3,21 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
+import { extname } from 'node:path'
+
 import {
 	workspace,
 	WorkspaceEdit as vsc_ws_edit,
 	Uri as vsc_uri,
 } from 'vscode'
 
-// import { ls_files } from '../helper/repo.js'
-// import {
-// 	apply_spdx_fmt,
-// 	gen_spdx_fmt,
-// 	spdx_pick_license,
-// } from '../helper.patch/license.js'
+import { ls_files } from '../helper/repo.js'
+import { fmt_ensure_arg, fmt_resolve } from '../helper.patch/fmt.js'
+import {
+	spdx_fixup_id,
+	spdx_emit_header,
+	spdx_pick_license,
+} from '../helper.patch/spdx.js'
 
 const {
 	applyEdit: vsc_apply_edit,
@@ -22,29 +25,46 @@ const {
 	saveAll: vsc_save_all,
 } = workspace
 
-function move(doc, edit, old_license, new_license)
+function move(doc, cursor, from, to)
 {
-	const fmt = gen_spdx_fmt(doc.languageId, this.config)
+	const path = doc.uri.fsPath
+	const lang = doc.languageId
+	const ext = extname(path)
 
-	const old_spdx = apply_spdx_fmt(fmt, old_license)
-	const new_spdx = apply_spdx_fmt(fmt, new_license)
+	let { spdx: fmt } = fmt_resolve(this.format, ext, lang, [ 'spdx' ])
 
-	const line0 = doc.lineAt(0)
+	fmt = fmt_ensure_arg(fmt)
 
-	if (line0.text != old_spdx)
-		return
+	const origin = spdx_emit_header(fmt, from)
+	const replace = spdx_emit_header(fmt, to)
 
-	edit.replace(doc.uri, line0.range, new_spdx)
+	let line = doc.lineAt(0)
+	let text = line.text
+
+	if (text.startsWith('#!')) {
+		line = doc.lineAt(1)
+		text = line.text
+	}
+
+	if (text == origin)
+		cursor.replace(doc.uri, line.range, replace)
 }
 
 export async function exec()
 {
 	const edit = new vsc_ws_edit()
 
-	const old_license = await spdx_pick_license(
-		'Select the license to replace', 'old license')
-	const new_license = await spdx_pick_license(
-		'Select the license to replace with', 'new license')
+	const from_id = await spdx_pick_license({
+		prompt: 'Select the license to replace',
+		hint: 'from',
+	})
+	const to_id = await spdx_pick_license({
+		prompt: 'Select the license to replace with',
+		hint: 'to',
+	})
+
+	const from = spdx_fixup_id(from_id)
+	const to = spdx_fixup_id(to_id)
 
 	let files = ls_files()
 	let tasks = []
@@ -54,10 +74,10 @@ export async function exec()
 	for (const file of files) {
 		const task = vsc_open(file).then(doc =>
 		{
-			move.call(this, doc, edit, old_license, new_license)
+			move.call(this, doc, edit, from, to)
 			return doc
 
-		}).catch(() => undefined)
+		}).catch(console.error)
 
 		tasks.push(task)
 	}
