@@ -7,13 +7,13 @@ import { extname } from 'node:path'
 
 export function fmt_has_arg(fmt)
 {
-	return fmt.match(/\{\}/)
+	return fmt.match(FMT_ARG_RE)
 }
 
 export function fmt_ensure_arg(fmt)
 {
 	if (!fmt_has_arg(fmt))
-		fmt += ' {}'
+		fmt += ` ${FMT_ARG}`
 
 	return fmt
 }

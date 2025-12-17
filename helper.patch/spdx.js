@@ -55,5 +55,5 @@ export function spdx_fixup_id(id)
 
 export function spdx_emit_header(fmt, id)
 {
-	return fmt.replace(/\{\}/, `SPDX-License-Identifier: ${id}`)
+	return fmt.replace(FMT_ARG_RE, `SPDX-License-Identifier: ${id}`)
 }

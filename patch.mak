@@ -1,5 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+esbuild-extra := --inject:define.js
+
 license-prefix := license-list-data/json
 
 picomatch-y := $(module-prefix)/picomatch/package.json

@@ -126,7 +126,7 @@ async function insert_copr(editor, fmts, fmts_path, changes, next_in)
 
 		if (fmt_has_arg(fmt)) {
 			found++
-			header = fmt.replace(/\{\}/, repl)
+			header = fmt.replace(FMT_ARG_RE, repl)
 		}
 
 		next += push_change(doc, line.text, header, next, changes)
