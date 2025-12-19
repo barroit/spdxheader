@@ -8,24 +8,27 @@ import { commands, workspace } from 'vscode'
 import { vsc_map_ctx } from './helper/vsc.js'
 
 const {
-	registerCommand: cmd,
-	registerTextEditorCommand: editor_cmd
+	registerCommand: vsc_cmd,
+	registerTextEditorCommand: vsc_editor_cmd
 } = commands
 
-const { getConfiguration: config_of } = workspace
+const { getConfiguration: vsc_fetch_config } = workspace
 
 const cmds = {
-	'add':       [ import('./cmd/add.js'),       editor_cmd ],
-	'addef':     [ import('./cmd/addef.js'),     editor_cmd ],
-	'update':    [ import('./cmd/update.js'),    editor_cmd ],
-	'move-ws':   [ import('./cmd/move_ws.js'),   cmd        ],
-	'update-ws': [ import('./cmd/update_ws.js'), cmd        ],
+	'add':       [ import('./cmd/add.js'),       vsc_editor_cmd ],
+	'addef':     [ import('./cmd/addef.js'),     vsc_editor_cmd ],
+	'update':    [ import('./cmd/update.js'),    vsc_editor_cmd ],
+	'move-ws':   [ import('./cmd/move_ws.js'),   vsc_cmd        ],
+	'update-ws': [ import('./cmd/update_ws.js'), vsc_cmd        ],
+}
+
+function fetch_format()
+{
+	return vsc_fetch_config('spdxheader')
 }
 
 export async function activate(ctx)
 {
-	const fetch_format = () => config_of('spdxheader')
-
 	for (const id of Object.keys(cmds)) {
 		const [ module_promise, cb ] = cmds[id]
 
