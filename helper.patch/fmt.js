@@ -5,6 +5,8 @@
 
 import { extname } from 'node:path'
 
+import escape from 'escape-string-regexp'
+
 export function fmt_has_arg(fmt)
 {
 	return fmt.match(FMT_ARG_RE)
@@ -16,6 +18,33 @@ export function fmt_ensure_arg(fmt)
 		fmt += ` ${FMT_ARG}`
 
 	return fmt
+}
+
+export function fmt_emit_re_str(fmt_in, str, opt)
+{
+	const unsafe = fmt_in.split(FMT_ARG, 2)
+	const safe = unsafe.map(escape)
+	let fmt = safe.join(str)
+
+	if (!opt)
+		return fmt
+
+	if (opt.begin)
+		fmt = `^${fmt}`
+	if (opt.end)
+		fmt = `${fmt}$`
+
+	return fmt
+}
+
+export function fmt_emit_re(fmt_in, str, opt)
+{
+	const fmt = fmt_emit_re_str(fmt_in, str, opt)
+
+	if (opt && opt.flag)
+		return new RegExp(fmt, opt.flag)
+	else
+		return new RegExp(fmt)
 }
 
 function keys_to_set(obj)

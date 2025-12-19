@@ -9,6 +9,7 @@
       "vscode": "^1.74.0"
    },
    "devDependencies": {
+      "escape-string-regexp": "^5.0.0",
       "picomatch": "^4.0.3"
    },
    "contributes": {

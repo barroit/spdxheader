@@ -4,7 +4,7 @@ esbuild-extra := --inject:define.js
 
 license-prefix := license-list-data/json
 
-npm-packages := picomatch
+npm-packages := picomatch escape-string-regexp
 
 npm-modules  := $(addprefix $(module-prefix)/,$(npm-packages))
 npm-module-y := $(addsuffix /package.json,$(npm-modules))
