@@ -26,10 +26,4 @@ dnl
    "title": "move license id (workspace)",
    "category": "spdx",
    "enablement": "workbenchState != empty"
-},
-{
-   "command": "spdxheader.update-ws",
-   "title": "update header (workspace)",
-   "category": "spdx",
-   "enablement": "workbenchState != empty"
 }

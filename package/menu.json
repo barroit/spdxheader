@@ -26,9 +26,5 @@ dnl
    {
       "command": "spdxheader.move-ws",
       "group": "ws"
-   },
-   {
-      "command": "spdxheader.update-ws",
-      "group": "ws"
    }
 ]

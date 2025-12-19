@@ -19,7 +19,6 @@ const cmds = {
 	'addef':     [ import('./cmd/addef.js'),     vsc_editor_cmd ],
 	'update':    [ import('./cmd/update.js'),    vsc_editor_cmd ],
 	'move-ws':   [ import('./cmd/move_ws.js'),   vsc_cmd        ],
-	'update-ws': [ import('./cmd/update_ws.js'), vsc_cmd        ],
 }
 
 function fetch_format()
