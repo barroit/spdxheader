@@ -11,8 +11,8 @@ import {
 	Uri as vsc_uri,
 } from 'vscode'
 
-import { ls_files } from '../helper/repo.js'
 import { fmt_ensure_arg, fmt_resolve } from '../helper.patch/fmt.js'
+import { git_ls_files } from '../helper/git.js'
 import {
 	spdx_fixup_id,
 	spdx_emit_header,
@@ -62,7 +62,7 @@ export async function exec()
 	const from = spdx_fixup_id(from_id)
 	const to = spdx_fixup_id(to_id)
 
-	let files = ls_files()
+	let files = git_ls_files()
 	let tasks = []
 
 	files = files.map(vsc_uri.file)

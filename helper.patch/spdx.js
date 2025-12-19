@@ -8,7 +8,7 @@ import { join } from 'node:path'
 import { window } from 'vscode'
 
 import { die } from '../helper/mesg.js'
-import { prefix } from '../helper/repo.js'
+import { git_show_toplevel } from '../helper/git.js'
 
 const { showQuickPick: vsc_quick_pick } = window
 
@@ -17,8 +17,8 @@ const license_ids = new Set(license_id_arr)
 
 function spdx_scan_license()
 {
-	const repo = prefix()
-	const license_dir = join(repo, 'LICENSES')
+	const toplevel = git_show_toplevel()
+	const license_dir = join(toplevel, 'LICENSES')
 	let licenses = []
 
 	if (exists(license_dir))

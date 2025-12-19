@@ -5,7 +5,7 @@
 
 import { commands, workspace } from 'vscode'
 
-import { map_ctx } from './helper/vsc.js'
+import { vsc_map_ctx } from './helper/vsc.js'
 
 const {
 	registerCommand: cmd,
@@ -30,7 +30,7 @@ export async function activate(ctx)
 		const [ module_promise, cb ] = cmds[id]
 
 		const module = await module_promise
-		const cmd_ctx = map_ctx(ctx)
+		const cmd_ctx = vsc_map_ctx(ctx)
 
 		const exec = cb(`spdxheader.${id}`, module.exec, cmd_ctx)
 
