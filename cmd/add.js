@@ -4,11 +4,11 @@
  */
 
 import { isMatch as test } from 'picomatch'
-import { Position as vsc_pos, Range as vsc_range, window } from 'vscode'
 
 import { git_user_name, git_user_email } from '../helper/git.js'
 import { info, die } from '../helper/mesg.js'
 import { today } from '../helper/time.js'
+import { vsc_pos, vsc_range, vsc_quick_pick } from '../helper/vsc.js'
 
 import {
 	fmt_has_arg,
@@ -21,8 +21,6 @@ import {
 	spdx_fixup_id,
 	spdx_emit_header,
 } from '../helper.patch/spdx.js'
-
-const { showQuickPick: vsc_quick_pick } = window
 
 const INSERT  = 0
 const REPLACE = 1

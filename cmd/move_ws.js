@@ -5,25 +5,21 @@
 
 import { extname } from 'node:path'
 
-import {
-	workspace,
-	WorkspaceEdit as vsc_ws_edit,
-	Uri as vsc_uri,
-} from 'vscode'
-
 import { fmt_ensure_arg, fmt_resolve } from '../helper.patch/fmt.js'
 import { git_ls_files } from '../helper/git.js'
+import {
+	vsc_apply,
+	vsc_open,
+	vsc_save_all,
+	vsc_ws_edit,
+	vsc_uri,
+} from '../helper/vsc.js'
+
 import {
 	spdx_fixup_id,
 	spdx_emit_header,
 	spdx_pick_license,
 } from '../helper.patch/spdx.js'
-
-const {
-	applyEdit: vsc_apply_edit,
-	openTextDocument: vsc_open,
-	saveAll: vsc_save_all,
-} = workspace
 
 function move(doc, cursor, from, to)
 {

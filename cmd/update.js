@@ -3,10 +3,9 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-import { Position as vsc_pos, Range as vsc_range } from 'vscode'
-
-import { today } from '../helper/time.js'
 import { git_user_name, git_user_email } from '../helper/git.js'
+import { today } from '../helper/time.js'
+import { vsc_pos, vsc_range } from '../helper/vsc.js'
 
 import {
 	fmt_ensure_arg,

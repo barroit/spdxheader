@@ -3,22 +3,18 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-import { commands, workspace } from 'vscode'
-
-import { vsc_map_ctx } from './helper/vsc.js'
-
-const {
-	registerCommand: vsc_cmd,
-	registerTextEditorCommand: vsc_editor_cmd
-} = commands
-
-const { getConfiguration: vsc_fetch_config } = workspace
+import {
+	 vsc_add_cmd,
+	 vsc_add_editor_cmd,
+	 vsc_fetch_config,
+	 vsc_map_ctx,
+} from './helper/vsc.js'
 
 const cmds = {
-	'add':       [ import('./cmd/add.js'),       vsc_editor_cmd ],
-	'addef':     [ import('./cmd/addef.js'),     vsc_editor_cmd ],
-	'update':    [ import('./cmd/update.js'),    vsc_editor_cmd ],
-	'move-ws':   [ import('./cmd/move_ws.js'),   vsc_cmd        ],
+	'add':       [ import('./cmd/add.js'),       vsc_add_editor_cmd ],
+	'addef':     [ import('./cmd/addef.js'),     vsc_add_editor_cmd ],
+	'update':    [ import('./cmd/update.js'),    vsc_add_editor_cmd ],
+	'move-ws':   [ import('./cmd/move_ws.js'),   vsc_add_cmd        ],
 }
 
 function fetch_format()

@@ -3,9 +3,7 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-import { commands } from 'vscode'
-
-const { executeCommand: exec_cmd } = commands
+import { vsc_exec_cmd } from '../helper/vsc.js'
 
 export function exec()
 {
@@ -14,5 +12,5 @@ export function exec()
 	const license = state.get('license')
 	const args = [ license ]
 
-	exec_cmd('spdxheader.add', args)
+	vsc_exec_cmd('spdxheader.add', args)
 }

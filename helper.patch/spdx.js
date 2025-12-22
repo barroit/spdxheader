@@ -5,12 +5,10 @@
 
 import { existsSync as exists, readdirSync as readdir } from 'node:fs'
 import { join } from 'node:path'
-import { window } from 'vscode'
 
-import { die } from '../helper/mesg.js'
 import { git_show_toplevel } from '../helper/git.js'
-
-const { showQuickPick: vsc_quick_pick } = window
+import { die } from '../helper/mesg.js'
+import { vsc_quick_pick } from '../helper/vsc.js'
 
 const { ids: license_id_arr } = await import('../build/licenses.json')
 const license_ids = new Set(license_id_arr)
