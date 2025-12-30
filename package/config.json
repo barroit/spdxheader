@@ -60,8 +60,8 @@ the SPDX license identifier. {} is required.",
    "type": "object",
    "markdownDescription": "Copyright notice applies only to sources whose dnl
 language or file extension matches a key listed here. Entries must be arrays dnl
-of [globs](https://www.npmjs.com/package/picomatch`#'globbing-features) that dnl
-mark files to ignore.",
+of [globs](https://www.npmjs.com/package/picomatch[[#]]globbing-features) dnl
+that mark files to ignore.",
    "default": {
       "c": [],
       "h": [],
